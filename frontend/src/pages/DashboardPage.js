@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getMyPatientProfile, getAppointments, getEMRs, getHealthMetrics, getAllDoctors } from '../api/client';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { getUserId } from '../utils/auth'; // Import getUserId
 import './DashboardPage.css';
 
 const DashboardPage = () => {
@@ -33,9 +34,15 @@ const DashboardPage = () => {
           setEmrs(emrData);
           setHealthMetrics(metrics);
         } else {
+          // No patient profile, check for a doctor profile
           setIsPatient(false);
+          const userId = getUserId(); // Use the stored user ID
+          if (!userId) {
+            setError('User ID not found. Please log in again.');
+            return;
+          }
           const doctorData = await getAllDoctors();
-          const myDoctorProfile = doctorData.find(doc => doc.user === JSON.parse(localStorage.getItem('user')).user_id);
+          const myDoctorProfile = doctorData.find(doc => doc.user === parseInt(userId));
           if (myDoctorProfile) {
             setProfile(myDoctorProfile);
             const [appts, emrData] = await Promise.all([

@@ -60,8 +60,19 @@ apiClient.interceptors.response.use(
 );
 
 // API Functions
-export const loginUser = (username, password) =>
-  apiClient.post('/token/', { username, password }).then(res => res.data);
+export const loginUser = async (username, password) => {
+  const res = await apiClient.post('/token/', { username, password });
+  const tokens = res.data;
+  setTokens(tokens);
+
+  // Decode the token to get the user ID
+  const base64Url = tokens.access.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const payload = JSON.parse(window.atob(base64));
+  localStorage.setItem('user_id', payload.user_id);
+  
+  return tokens;
+};
 
 export const registerUser = (data) =>
   apiClient.post('/register/', data).then(res => res.data);

@@ -14,4 +14,14 @@ export const setTokens = (tokens) => {
 
 export const removeTokens = () => {
   localStorage.removeItem('tokens');
+  localStorage.removeItem('user_id'); // Add this line
+};
+
+export const getUserId = () => {
+  try {
+    return localStorage.getItem('user_id');
+  } catch (error) {
+    console.error("Failed to get user ID from localStorage", error);
+    return null;
+  }
 };
