@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getMyPatientProfile, getAppointments, getEMRs, getHealthMetrics, getAllDoctors } from '../api/client';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { getUserId } from '../utils/auth'; // Import getUserId
+import { getUserId } from '../utils/auth';
 import './DashboardPage.css';
 
 const DashboardPage = () => {
@@ -36,7 +36,7 @@ const DashboardPage = () => {
         } else {
           // No patient profile, check for a doctor profile
           setIsPatient(false);
-          const userId = getUserId(); // Use the stored user ID
+          const userId = getUserId();
           if (!userId) {
             setError('User ID not found. Please log in again.');
             return;

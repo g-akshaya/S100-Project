@@ -14,7 +14,7 @@ export const setTokens = (tokens) => {
 
 export const removeTokens = () => {
   localStorage.removeItem('tokens');
-  localStorage.removeItem('user_id'); // Add this line
+  localStorage.removeItem('user_id');
 };
 
 export const getUserId = () => {
