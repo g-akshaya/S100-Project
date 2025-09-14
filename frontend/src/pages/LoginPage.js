@@ -43,7 +43,7 @@ const LoginPage = () => {
             type="text"
             id="username"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)} // Corrected line
             required
             autoComplete="username"
           />
