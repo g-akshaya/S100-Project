@@ -17,9 +17,9 @@ const LoginPage = () => {
     setLoading(true);
     try {
       await login(username, password);
-      // Check if profile exists and navigate accordingly
+      // After successful login, check for profile type and navigate
       const patientProfile = await import('../api/client').then(mod => mod.getMyPatientProfile());
-      if (patientProfile.length > 0) {
+      if (patientProfile && patientProfile.length > 0) {
         navigate('/dashboard');
       } else {
         navigate('/create-profile');
