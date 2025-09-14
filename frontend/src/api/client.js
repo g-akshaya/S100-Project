@@ -8,6 +8,20 @@ const apiClient = axios.create({
   },
 });
 
+export const refreshToken = async (refresh) => {
+  try {
+    const response = await axios.post(
+      `${process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000/api'}/token/refresh/`,
+      { refresh }
+    );
+    return response.data.access;
+  } catch (error) {
+    removeTokens();
+    window.location.href = '/login';
+    throw error;
+  }
+};
+
 // Request interceptor to attach JWT token
 apiClient.interceptors.request.use(
   (config) => {
@@ -33,17 +47,11 @@ apiClient.interceptors.response.use(
           removeTokens();
           return Promise.reject(error);
         }
-        const response = await axios.post(
-          `${process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000/api'}/token/refresh/`,
-          { refresh: tokens.refresh }
-        );
-        const newAccess = response.data.access;
+        const newAccess = await refreshToken(tokens.refresh);
         setTokens({ ...tokens, access: newAccess });
         originalRequest.headers.Authorization = `Bearer ${newAccess}`;
         return apiClient(originalRequest);
       } catch (refreshError) {
-        removeTokens();
-        window.location.href = '/login'; // Redirect to login on refresh failure
         return Promise.reject(refreshError);
       }
     }
